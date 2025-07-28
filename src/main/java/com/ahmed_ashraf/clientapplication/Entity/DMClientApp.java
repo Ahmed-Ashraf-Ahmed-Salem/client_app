@@ -1,9 +1,6 @@
 package com.ahmed_ashraf.clientapplication.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,11 +9,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DMClientApp {
-    @Id
-    @Column(name = "SERIAL")
-    private Long serial;
 
-    @Column(name = "NATIONALNO")
-    private String nationalNo;
+    @EmbeddedId
+    private DMClientAppId id;
+
+    @Column(name = "off_CODE")
+    private String off_CODE;
+
+    @Column(name = "APP_STAT")
+    private String APP_STAT;
 }
 

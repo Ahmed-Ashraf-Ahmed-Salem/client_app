@@ -13,6 +13,7 @@ public interface DMClientAppDeletedRepository extends JpaRepository<DMClientAppD
 
 
 
+
 /*
 package com.ahmed_ashraf.clientapplication.Repository;
 

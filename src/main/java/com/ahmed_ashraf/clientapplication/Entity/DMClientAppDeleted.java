@@ -28,7 +28,7 @@ public class DMClientAppDeleted {
     private String appLastUpdate;
 
     @Column(name = "LASTUPDATE")
-    private Date lastUpdate;
+    private String lastUpdate;
 }
 
 
