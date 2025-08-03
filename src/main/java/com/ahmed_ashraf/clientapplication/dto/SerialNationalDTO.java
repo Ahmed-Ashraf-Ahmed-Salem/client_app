@@ -13,4 +13,5 @@ import lombok.Setter;
 public class SerialNationalDTO {
     private Long serial;
     private String nationalno;
+    private String empStatus;
 }

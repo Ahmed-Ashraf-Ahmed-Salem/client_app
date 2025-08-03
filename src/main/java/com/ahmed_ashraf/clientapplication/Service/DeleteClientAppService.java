@@ -5,6 +5,7 @@ import com.ahmed_ashraf.clientapplication.Repository.DMClientAppDeletedRepositor
 import com.ahmed_ashraf.clientapplication.Repository.DMClientAppRepository;
 import com.ahmed_ashraf.clientapplication.Repository.LrOfficerRepository;
 import com.ahmed_ashraf.clientapplication.dto.DeleteRequestDTO;
+import com.ahmed_ashraf.clientapplication.dto.DeleteResponse;
 import com.ahmed_ashraf.clientapplication.dto.DeletedRecordDTO;
 import com.ahmed_ashraf.clientapplication.dto.SerialNationalDTO;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,7 +26,8 @@ import java.text.SimpleDateFormat;
 @RequiredArgsConstructor
 public class DeleteClientAppService {
 
-    private final String API_URL = "http://localhost/opr/delete_records.php";
+//    private final String API_URL = "http://localhost/opr/delete__records.php";
+    private final String API_URL = "https://opr.aba-apps.com:1504/webserv/delete__records.php";
     private final String AUTH_TOKEN = "jvPG6MdrLiVjOFY7aAXzeFct85ADAP";
     private final DMClientAppDeletedRepository deletedRepo;
 
@@ -110,15 +111,41 @@ public class DeleteClientAppService {
             // Set headers
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+        //    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.set("Authorization", "Bearer " + AUTH_TOKEN);
+
+            // log
+            System.out.println("===================================");
+            System.out.println(new ObjectMapper().writeValueAsString(requestDTO));
+            System.out.println("===================================");
+
 
             HttpEntity<DeleteRequestDTO> entity = new HttpEntity<>(requestDTO, headers);
 
+            System.out.println("===================================");
+            System.out.println("✅ Request entity: " + new ObjectMapper().writeValueAsString(entity));
+            System.out.println("===================================");
+
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> response = restTemplate.postForEntity(API_URL, entity, String.class);
+        //    ResponseEntity<String> response = restTemplate.postForEntity(API_URL, entity, String.class);
+
+            ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+            String body = response.getBody(); // Should NOT be null
+
+            System.out.println("===================================");
+            System.out.println("✅ Response entity: " + new ObjectMapper().writeValueAsString(response));
+            System.out.println("===================================");
 
             String rawResponse = response.getBody();
-            System.out.println("✅ Raw PHP Response: " + rawResponse);
+
+            if (rawResponse == null || rawResponse.isEmpty()) {
+                System.out.println("❌ Response body is null or empty.");
+                return "";
+            }else{
+                System.out.println("✅ Raw PHP Response: " + rawResponse);
+            }
+
+            System.out.println("✅ Raw PHP Response body: " + body);
 
             // 🔍 Extract only the JSON part (from first '{' to last '}')
             int jsonStart = rawResponse.indexOf('{');
@@ -129,9 +156,46 @@ public class DeleteClientAppService {
             }
 
             String jsonOnly = rawResponse.substring(jsonStart, jsonEnd);
+            System.out.println("✅ jsonOnly Response: " + jsonOnly);
 
             // Parse valid JSON only
             ObjectMapper mapper = new ObjectMapper();
+//---------------------------------- 3/8/2025
+            DeleteResponse deleteResponse = mapper.readValue(jsonOnly, DeleteResponse.class);
+
+            // Print the message
+            System.out.println("✅ Message: " + deleteResponse.getMessage());
+
+            // Print all deleted records
+            if ("OK".equalsIgnoreCase(deleteResponse.getStatus())) {
+                if (deleteResponse.getDeleted_records() != null) {
+                    for (DeletedRecordDTO record : deleteResponse.getDeleted_records()) {
+                        System.out.println("🔸 Serial: " + record.getSerial());
+                        System.out.println("🔸 NationalNo: " + record.getNationalno());
+                        System.out.println("🔸 Branch Code: " + record.getOffBranchCode());
+                        System.out.println("🔸 Office Code: " + record.getOffCode());
+                        System.out.println("🔸 App Date: " + record.getAppDate());
+                        System.out.println("🔸 Last Update: " + record.getLastUpdate());
+                        System.out.println("-----------------------------------");
+                    }
+                } else {
+                    System.out.println("⚠️ No deleted records returned.");
+                }
+            } else {
+                System.out.println("❌ Delete failed: " + deleteResponse.getMessage());
+            }
+
+        /*    for (DeletedRecordDTO record : deleteResponse.getDeleted_records()) {
+                System.out.println("🔸 Serial: " + record.getSerial());
+                System.out.println("🔸 NationalNo: " + record.getNationalno());
+                System.out.println("🔸 Branch Code: " + record.getOffBranchCode());
+                System.out.println("🔸 Office Code: " + record.getOffCode());
+                System.out.println("🔸 App Date: " + record.getAppDate());
+                System.out.println("🔸 Last Update: " + record.getLastUpdate());
+                System.out.println("-----------------------------------");
+            }*/
+//----------------------------------
+
             JsonNode root = mapper.readTree(jsonOnly);
 
             String status = root.path("status").asText();
