@@ -20,12 +20,12 @@ public class ClientAppService {
     public List<SerialNationalDTO> getAllSerialsAndNationalnos() {
         List<Object[]> rawData = repository.findSerialsAndNIDs();
 
-        System.out.println("Total Records: " + rawData.size());
+    /*    System.out.println("Total Records: " + rawData.size());
 
         rawData.forEach(obj -> System.out.println(
                 "Serial: " + obj[0] + ", NationalNo: " + obj[1] + ", Emp_Status: " + obj[2]
         ));
-
+    */
      /*   for(Object o:  rawData){
             System.out.println(o.getClass());
         }*/

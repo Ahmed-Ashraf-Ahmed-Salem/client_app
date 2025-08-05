@@ -16,6 +16,9 @@ public class DeletedRecordDTO {
     @JsonProperty("nationalno")
     private String nationalno;
 
+    @JsonProperty("emp_status")
+    private String emp_status;
+
     @JsonProperty("OFF_BRANCH_CODE")
     private String offBranchCode;
 

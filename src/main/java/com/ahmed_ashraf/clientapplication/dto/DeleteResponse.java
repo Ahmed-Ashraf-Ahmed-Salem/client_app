@@ -1,5 +1,6 @@
 package com.ahmed_ashraf.clientapplication.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+//@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 @Data

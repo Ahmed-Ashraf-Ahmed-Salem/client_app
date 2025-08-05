@@ -49,6 +49,7 @@ public interface DMClientAppRepository extends JpaRepository<DMClientApp, DMClie
                      AND dm.APP_STAT = 'C'
                 THEN 1
                 END =1
+                order by serial
         """, nativeQuery = true)
     List<Object[]> findSerialsAndNIDs();
 }

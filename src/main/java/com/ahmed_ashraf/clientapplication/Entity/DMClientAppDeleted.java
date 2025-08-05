@@ -15,6 +15,9 @@ public class DMClientAppDeleted {
     @EmbeddedId
     private DMClientAppDeletedId id;
 
+    @Column(name = "EMP_STATUS")
+    private String emp_status;
+
     @Column(name = "OFF_BRANCH_CODE")
     private String offBranchCode;
 
