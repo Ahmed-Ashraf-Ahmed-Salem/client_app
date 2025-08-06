@@ -29,15 +29,15 @@ public class ClientAppController {
 
     @PostMapping("/delete")
     public ResponseEntity<String> deleteClientAppData() {
-        System.out.println("🗑️ Received request for /api/clientapp/delete");
+        System.out.println("🗑Received request for /api/clientapp/delete");
     //    dservice.deleteClientApps(service.getAllSerialsAndNationalnos());
        // return ResponseEntity.ok("Deleted successfully");
         String status = dservice.deleteClientApps(service.getAllSerialsAndNationalnos());
         if ("OK".equalsIgnoreCase(status)) {
-            return ResponseEntity.ok("✅ Records deleted successfully and archived.");
+            return ResponseEntity.ok("Records deleted successfully and archived.");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("❌ Failed to delete some or all records.");
+                    .body("Failed to delete some or all records.");
         }
     }
 }

@@ -23,7 +23,7 @@ public class ClientapplicationApplication {
 	@Bean
 	CommandLineRunner run(DeleteClientAppService dservice, ClientAppService service) {
 		return args -> {
-		//	System.out.println("🚀 Running deletion process directly from main()...");
+			System.out.println("Running deletion process ...");
 			String status = dservice.deleteClientApps(service.getAllSerialsAndNationalnos());
 			if ("OK".equalsIgnoreCase(status)) {
 				System.out.println("\u001B[32m" + "Records deleted successfully and archived." + "\u001B[0m");
