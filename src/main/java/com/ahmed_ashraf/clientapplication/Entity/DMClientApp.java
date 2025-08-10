@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
+
 @Entity
 @Table(name = "dm_clientapp")
 @Getter
@@ -18,5 +21,8 @@ public class DMClientApp {
 
     @Column(name = "APP_STAT")
     private String APP_STAT;
+
+    @Column(name = "LASTUPDATE")
+    private LocalDateTime LASTUPDATE;
 }
 

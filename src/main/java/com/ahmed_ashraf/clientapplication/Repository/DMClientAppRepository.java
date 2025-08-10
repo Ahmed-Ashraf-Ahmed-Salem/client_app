@@ -62,7 +62,8 @@ public interface DMClientAppRepository extends JpaRepository<DMClientApp, DMClie
     @Query(value = """
         UPDATE dm_clientapp app
             SET app.off_CODE = NULL,
-               app.app_stat = 'N'
+                app.app_stat = 'N',
+                app.LASTUPDATE = SYSDATE
         WHERE (app.serial, app.NATIONALNO) IN (
             SELECT dm.serial, dm.NATIONALNO
               FROM

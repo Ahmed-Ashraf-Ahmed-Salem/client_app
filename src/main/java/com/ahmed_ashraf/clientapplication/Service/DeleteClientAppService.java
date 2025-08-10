@@ -1,6 +1,7 @@
 package com.ahmed_ashraf.clientapplication.Service;
 
 import com.ahmed_ashraf.clientapplication.Entity.*;
+import com.ahmed_ashraf.clientapplication.Repository.DMClientAppDeletedRepository;
 import com.ahmed_ashraf.clientapplication.Repository.DMClientAppRepository;
 import com.ahmed_ashraf.clientapplication.Repository.LrOfficerRepository;
 import com.ahmed_ashraf.clientapplication.dto.DeleteRequestDTO;
@@ -16,6 +17,9 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,7 +29,7 @@ public class DeleteClientAppService {
  //   private final String API_URL = "http://localhost/opr/delete__records.php";
     private final String API_URL = "https://opr.aba-apps.com:1504/webserv/delete__records.php";
     private final String AUTH_TOKEN = "jvPG6MdrLiVjOFY7aAXzeFct85ADAP";
- //   private final DMClientAppDeletedRepository deletedRepo;
+    private final DMClientAppDeletedRepository deletedRepo;
 
     @Autowired
     private LrOfficerRepository lrOfficerRepository;
@@ -37,7 +41,7 @@ public class DeleteClientAppService {
     public void saveDeletedRecords(List<DeletedRecordDTO> records) {
         for (DeletedRecordDTO dto : records) {
             try {
-            /*    // commented for now by madam salwa
+                // commented for now by madam salwa
                 DMClientAppDeleted entity = new DMClientAppDeleted();
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String formattedDate = formatter.format(new Date());
@@ -66,7 +70,7 @@ public class DeleteClientAppService {
                 }, () -> {
                     throw new RuntimeException("Officer not found for update: " + officerId);
                 });
-                */
+
 
                 // === Update DM_CLIENTAPP ===
                 DMClientAppId clientAppId = new DMClientAppId(dto.getSerial(), dto.getNationalno());
@@ -75,6 +79,7 @@ public class DeleteClientAppService {
 
                 clientApp.setOff_CODE(null);
                 clientApp.setAPP_STAT("N");
+                clientApp.setLASTUPDATE(LocalDateTime.now());
                 dmClientAppRepository.save(clientApp);
 
             } catch (Exception ex) {
